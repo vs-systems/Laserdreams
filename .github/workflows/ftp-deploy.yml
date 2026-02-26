@@ -1,28 +1,26 @@
-name: Deploy to FTP
+name: Despliegue Laserdreans
 
 on:
   push:
     branches:
-      - main
+      - main  # O la rama que estés usando
 
 jobs:
   web-deploy:
-    name: Sincronización FTP
+    name: 🎉 Desplegar sitio
     runs-on: ubuntu-latest
     steps:
-      - name: Obtener últimos cambios
-        uses: actions/checkout@v4.1.1
-        with:
-          fetch-depth: 2
-      
-      - name: Sincronización FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.3
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftp
-          port: 21
-          security: loose
-          server-dir: public_html/
-          timeout: 9999000
+    - name: 🚚 Obtener código
+      uses: actions/checkout@v3
+
+    - name: 🚀 Desplegar vía FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: 109.106.251.247
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        server-dir: public_html/
+        timeout: 9999
+        # Los secretos deben configurarse en GitHub:
+        # FTP_USERNAME: u499089589.lsd
+        # FTP_PASSWORD: Blanca1938@
