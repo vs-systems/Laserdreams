@@ -44,27 +44,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         filteredProducts.forEach(product => {
-            // Build specs HTML
-            let specsHTML = '<ul class="product-specs">';
-            for (const [key, val] of Object.entries(product.specs)) {
-                specsHTML += `<li><span class="spec-key">${key}</span><span class="spec-val">${val}</span></li>`;
-            }
-            specsHTML += '</ul>';
-
             // WhatsApp Message Encoding
-            const message = `Hola Laser Dreams! Me interesa consultar precio y disponibilidad del producto: ${product.name} (${product.category}).`;
+            const message = `Hola Laserdreams! Me interesa consultar precio y disponibilidad del producto: ${product.name} (${product.category}).`;
             const encodedMessage = encodeURIComponent(message);
             const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
 
             const card = document.createElement('div');
             card.classList.add('product-card');
             card.innerHTML = `
-        <div class="product-category">${product.category}</div>
         <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy">
-        <h3 class="product-name">${product.name}</h3>
-        <p class="product-desc">${product.description}</p>
-        ${specsHTML}
-        <a href="${whatsappURL}" target="_blank" class="btn btn-primary">Consultar por WhatsApp</a>
+        <h3 class="product-name" style="text-align: center; font-size: 1.2rem; margin-top: 10px;">${product.name}</h3>
+        <a href="${whatsappURL}" target="_blank" class="btn btn-primary">Consultar</a>
       `;
             productsWrapper.appendChild(card);
         });
