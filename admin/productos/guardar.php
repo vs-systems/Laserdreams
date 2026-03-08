@@ -37,11 +37,23 @@ try {
         throw new Exception('El título es obligatorio.');
     }
 
+    $manual_tecnico = null;
+    if (isset($_FILES['manual_tecnico']) && $_FILES['manual_tecnico']['error'] === UPLOAD_ERR_OK) {
+        $ext = strtolower(pathinfo($_FILES['manual_tecnico']['name'], PATHINFO_EXTENSION));
+        if ($ext === 'pdf') {
+            $nombre_doc = 'manual_' . time() . '_' . rand(1000, 9999) . '.pdf';
+            $ruta_destino = __DIR__ . '/../../uploads/productos/' . $nombre_doc;
+            if (move_uploaded_file($_FILES['manual_tecnico']['tmp_name'], $ruta_destino)) {
+                $manual_tecnico = $nombre_doc;
+            }
+        }
+    }
+
     $stmt = $pdo->prepare("
         INSERT INTO productos
         (codigo, titulo, marca, descripcion, categoria_id, activo, es_oferta, es_nuevo, es_destacado,
-         tipo_bulto, unidades_por_bulto, costo_compra, margen_porcentaje, precio_venta_usd)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         tipo_bulto, unidades_por_bulto, costo_compra, margen_porcentaje, precio_venta_usd, manual_tecnico)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
     $stmt->execute([
@@ -58,7 +70,8 @@ try {
         $unidades_por_bulto,
         $costo_compra,
         $margen_porcentaje,
-        $precio_venta_usd
+        $precio_venta_usd,
+        $manual_tecnico
     ]);
 
     $producto_id = $pdo->lastInsertId();

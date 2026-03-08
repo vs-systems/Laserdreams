@@ -11,7 +11,7 @@ require __DIR__ . '/../includes/header.php';
 $cotizacion_js = $GLOBALS['cotizacion_aplicada'] ?? 0;
 ?>
 
-<form action="guardar.php" method="post" class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+<form action="guardar.php" method="post" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
     <!-- Columna Principal -->
     <div class="lg:col-span-2 space-y-8">
@@ -61,10 +61,17 @@ $cotizacion_js = $GLOBALS['cotizacion_aplicada'] ?? 0;
                     class="w-full px-6 py-5 rounded-3xl bg-gray-50 border border-transparent focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 transition-all outline-none font-medium text-gray-600 leading-relaxed"></textarea>
             </div>
 
+            <div>
+                <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-3">Subir Manual
+                    Técnico (PDF) - Opcional</label>
+                <input type="file" name="manual_tecnico" accept="application/pdf"
+                    class="w-full px-6 py-4 rounded-2xl bg-gray-50 border border-transparent focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 transition-all outline-none font-black text-gray-900">
+            </div>
+
             <div class="bg-violet-50 p-6 rounded-3xl border border-violet-100 flex items-center gap-4">
                 <span class="text-2xl">📸</span>
                 <p class="text-xs font-bold text-violet-800 leading-tight uppercase tracking-tight">
-                    Podrás subir las fotos, el video y el "Manual Técnico" PDF en el siguiente paso.
+                    Podrás subir las fotos y videos del producto en el siguiente paso.
                 </p>
             </div>
         </div>

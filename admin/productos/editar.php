@@ -32,7 +32,8 @@ require __DIR__ . '/../includes/header.php';
 $cotizacion_js = $GLOBALS['cotizacion_aplicada'] ?? 0;
 ?>
 
-<form action="actualizar.php" method="post" class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+<form action="actualizar.php" method="post" enctype="multipart/form-data"
+    class="grid grid-cols-1 lg:grid-cols-3 gap-10">
     <input type="hidden" name="id" value="<?= (int) $producto['id'] ?>">
 
     <!-- Columna Principal: Datos Teóricos -->
@@ -81,6 +82,27 @@ $cotizacion_js = $GLOBALS['cotizacion_aplicada'] ?? 0;
                     Larga Profesional</label>
                 <textarea name="descripcion" rows="8"
                     class="w-full px-6 py-5 rounded-3xl bg-gray-50 border border-transparent focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 transition-all outline-none font-medium text-gray-600 leading-relaxed"><?= e($producto['descripcion']) ?></textarea>
+            </div>
+
+            <div>
+                <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-3">Manual Técnico
+                    (PDF) - Opcional</label>
+                <?php if (!empty($producto['manual_tecnico'])): ?>
+                    <div class="mb-4 p-4 bg-red-50 rounded-2xl border border-red-100 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">📄</span>
+                            <div>
+                                <p class="text-sm font-bold text-red-900">PDF Actual Cargado</p>
+                                <a href="/uploads/productos/<?= e($producto['manual_tecnico']) ?>" target="_blank"
+                                    class="text-xs text-red-600 hover:underline">Ver archivo</a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+                <input type="file" name="manual_tecnico" accept="application/pdf"
+                    class="w-full px-6 py-4 rounded-2xl bg-gray-50 border border-transparent focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 transition-all outline-none font-black text-gray-900">
+                <p class="text-[10px] text-gray-400 mt-2 uppercase tracking-widest">Subir un nuevo archivo reemplazará
+                    al anterior.</p>
             </div>
         </div>
 

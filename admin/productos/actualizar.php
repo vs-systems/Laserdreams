@@ -34,7 +34,22 @@ $destacado = isset($_POST['es_destacado']) ? 1 : 0;
 try {
     $pdo->beginTransaction();
 
-    $stmt = $pdo->prepare("
+    $sql_update_extra = "";
+    $params_extra = [];
+
+    if (isset($_FILES['manual_tecnico']) && $_FILES['manual_tecnico']['error'] === UPLOAD_ERR_OK) {
+        $ext = strtolower(pathinfo($_FILES['manual_tecnico']['name'], PATHINFO_EXTENSION));
+        if ($ext === 'pdf') {
+            $nombre_doc = 'manual_' . time() . '_' . rand(1000, 9999) . '.pdf';
+            $ruta_destino = __DIR__ . '/../../uploads/productos/' . $nombre_doc;
+            if (move_uploaded_file($_FILES['manual_tecnico']['tmp_name'], $ruta_destino)) {
+                $sql_update_extra = ", manual_tecnico = ?";
+                $params_extra[] = $nombre_doc;
+            }
+        }
+    }
+
+    $sql = "
         UPDATE productos
         SET codigo = ?,
             titulo = ?,
@@ -50,10 +65,11 @@ try {
             costo_compra = ?,
             margen_porcentaje = ?,
             precio_venta_usd = ?
+            $sql_update_extra
         WHERE id = ?
-    ");
+    ";
 
-    $stmt->execute([
+    $final_params = [
         $codigo,
         $titulo,
         $marca,
@@ -67,9 +83,14 @@ try {
         $unidades_por_bulto,
         $costo_compra,
         $margen_porcentaje,
-        $precio_venta_usd,
-        $id
-    ]);
+        $precio_venta_usd
+    ];
+
+    $final_params = array_merge($final_params, $params_extra);
+    $final_params[] = $id;
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($final_params);
 
     $pdo->commit();
 

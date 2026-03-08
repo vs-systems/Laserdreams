@@ -206,12 +206,8 @@ $categorias = $pdo->query("SELECT id, nombre FROM categorias ORDER BY nombre")->
                         $recargo = $subtotal * 0.05;
                         $precio_final = $subtotal + $recargo;
                         ?>
-                        <div class="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">
-                            USD <?= number_format((float) $p['precio_venta_usd'], 2, ',', '.') ?>
-                        </div>
-                        <div class="text-2xl font-black text-gray-900 mb-4">
-                            $<?= number_format($precio_final, 0, ',', '.') ?> <span
-                                class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Final ARS</span>
+                        <div class="text-2xl font-black text-green-700 mb-4">
+                            $<?= number_format($precio_final, 0, ',', '.') ?>
                         </div>
 
                         <button

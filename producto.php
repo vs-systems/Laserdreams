@@ -110,14 +110,6 @@ $precio_final = $subtotal + $recargo;
                 </div>
             <?php endif; ?>
 
-            <?php if (!empty($p['manual_tecnico'])): ?>
-                <div class="pt-2">
-                    <a href="/uploads/productos/<?= e($p['manual_tecnico']) ?>" target="_blank"
-                        class="w-full bg-red-50 hover:bg-red-500 hover:text-white text-red-600 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-red-100 uppercase tracking-widest text-[10px]">
-                        <span class="text-xl">📄</span> Descargar Manual Técnico PDF
-                    </a>
-                </div>
-            <?php endif; ?>
         </div>
 
         <!-- Información del Producto -->
@@ -139,13 +131,9 @@ $precio_final = $subtotal + $recargo;
                     </div>
                 <?php endif; ?>
 
-                <div class="mb-2">
-                    <span class="text-xs font-black text-gray-400 uppercase tracking-widest">USD
-                        <?= number_format($p['precio_venta_usd'], 2, ',', '.') ?></span>
-                </div>
                 <div class="flex items-center gap-4">
-                    <span class="text-4xl font-black text-violet-600">$<?= number_format($precio_final, 0, ',', '.') ?>
-                        <span class="text-sm font-bold text-gray-400">ARS Final</span></span>
+                    <span
+                        class="text-4xl font-black text-green-700">$<?= number_format($precio_final, 0, ',', '.') ?></span>
                 </div>
             </div>
 
@@ -164,37 +152,44 @@ $precio_final = $subtotal + $recargo;
                     <div class="text-sm font-black text-gray-900"><?= (int) $p['unidades_por_bulto'] ?> u.</div>
                 </div>
 
-                <div class="pt-2">
+                <div class="pt-2 flex gap-3">
+                    <?php if (!empty($p['manual_tecnico'])): ?>
+                        <a href="/uploads/productos/<?= e($p['manual_tecnico']) ?>" target="_blank"
+                            class="w-1/2 bg-red-900 text-white py-4 rounded-xl font-bold hover:bg-red-950 transition-all flex items-center justify-center gap-2 text-sm text-center shadow-lg">
+                            📄 Manual Técnico
+                        </a>
+                    <?php endif; ?>
                     <button id="btnAddCart"
-                        class="w-full bg-gray-900 text-white py-5 rounded-2xl font-black text-lg hover:bg-violet-500 hover:text-black transition-all transform active:scale-95 shadow-xl shadow-gray-200 flex items-center justify-center gap-3 group"
+                        class="<?= !empty($p['manual_tecnico']) ? 'w-1/2' : 'w-full' ?> bg-red-600 text-white py-4 rounded-xl font-bold text-sm hover:bg-red-500 transition-all transform active:scale-95 shadow-lg flex items-center justify-center gap-2 group"
                         data-id="<?= (int) $p['id'] ?>" data-titulo="<?= e(ucwords(strtolower($p['titulo']))) ?>"
                         data-precio="<?= $precio_final ?>"
                         data-imagen="<?= !empty($p['foto_principal']) ? '/uploads/productos/' . e($p['foto_principal']) : '' ?>"
                         data-url="https://laserdreams.com.ar/producto.php?id=<?= (int) $p['id'] ?>"
                         onclick="addToCartProduct(this)">
-                        <span class="group-hover:rotate-12 transition-transform">🛒</span> Agregar al carrito
+                        <span class="text-lg group-hover:rotate-12 transition-transform">🛒</span> Agregar al carrito
                     </button>
-                    <p
-                        class="text-center mt-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center justify-center gap-2">
-                        NO INCLUYE FLETES
-                    </p>
                 </div>
-            </div>
-
-            <div class="mt-8 flex items-center justify-center gap-8 py-6 border-t border-gray-100">
-                <div class="text-center">
-                    <div class="text-2xl mb-1">🛡️</div>
-                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Calidad Garantizada</p>
-                </div>
-                <div class="text-center text-gray-100 font-thin italic">|</div>
-                <div class="text-center">
-                    <div class="text-2xl mb-1">🚚</div>
-                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Envíos al país</p>
-                </div>
+                <p
+                    class="text-center mt-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center justify-center gap-2">
+                    NO INCLUYE FLETES
+                </p>
             </div>
         </div>
 
+        <div class="mt-8 flex items-center justify-center gap-8 py-6 border-t border-gray-100">
+            <div class="text-center">
+                <div class="text-2xl mb-1">🛡️</div>
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Calidad Garantizada</p>
+            </div>
+            <div class="text-center text-gray-100 font-thin italic">|</div>
+            <div class="text-center">
+                <div class="text-2xl mb-1">🚚</div>
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Envíos al país</p>
+            </div>
+        </div>
     </div>
+
+</div>
 </div>
 
 <script>
