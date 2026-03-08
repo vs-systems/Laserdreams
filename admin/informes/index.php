@@ -35,7 +35,32 @@ $marcaStats = $pdo->query("
 
 $adminTitle = '📊 Informes y Estadísticas';
 require __DIR__ . '/../includes/header.php';
+
+// Obtener la cotización aplicada para mostrar en esta pantalla
+$cot_sanyi = $GLOBALS['cotizacion_aplicada'] ?? 0;
+$cot_bigdipper = $GLOBALS['dolar_oficial_base'] ?? 0;
 ?>
+
+<!-- Cotizaciones de Dólares -->
+<div class="mb-8 flex flex-col sm:flex-row gap-4">
+    <div
+        class="bg-blue-900 border border-blue-800 text-white p-4 rounded-2xl flex-1 shadow-sm flex items-center justify-between">
+        <div>
+            <h3 class="text-[10px] font-black uppercase tracking-widest text-blue-300">Dólar SANYI</h3>
+            <p class="text-xs text-blue-200 mt-0.5">Dólar Blue (Venta) + $15</p>
+        </div>
+        <div class="text-2xl font-black">$<?= number_format($cot_sanyi, 2, ',', '.') ?></div>
+    </div>
+
+    <div
+        class="bg-emerald-900 border border-emerald-800 text-white p-4 rounded-2xl flex-1 shadow-sm flex items-center justify-between">
+        <div>
+            <h3 class="text-[10px] font-black uppercase tracking-widest text-emerald-300">Dólar Bigdipper</h3>
+            <p class="text-xs text-emerald-200 mt-0.5">Dólar Oficial del BNA (Venta)</p>
+        </div>
+        <div class="text-2xl font-black">$<?= number_format($cot_bigdipper, 2, ',', '.') ?></div>
+    </div>
+</div>
 
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

@@ -39,13 +39,7 @@ $cotizacion_aplicada = $GLOBALS['cotizacion_aplicada'] ?? 0;
             </div>
 
             <div class="flex items-center gap-4 hidden md:flex">
-                <div
-                    class="bg-blue-900/40 border border-blue-500/30 text-blue-300 px-3 py-1.5 rounded-lg flex items-center gap-2">
-                    <span class="text-[10px] font-bold uppercase tracking-widest opacity-80">Dólar Blue (V. +
-                        $15)</span>
-                    <span
-                        class="text-sm font-black">$<?php echo number_format($cotizacion_aplicada, 2, ',', '.'); ?></span>
-                </div>
+                <!-- Espacio reservado si se requieren otros indicadores globales en el futuro -->
             </div>
 
             <div class="flex items-center gap-6">
