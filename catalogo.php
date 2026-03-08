@@ -18,7 +18,7 @@ $busqueda = $_GET['q'] ?? '';
 $categoria = $_GET['categoria'] ?? '';
 $marca = $_GET['marca'] ?? '';
 
-$porPagina = 9;
+$porPagina = 12;
 $pagina = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 if ($pagina < 1)
     $pagina = 1;
@@ -136,8 +136,13 @@ $marcas = $pdo->query("SELECT id, nombre FROM marcas ORDER BY nombre")->fetchAll
     <!-- Header Sección -->
     <div class="mb-12 text-center">
         <h1 class="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">Nuestro Catálogo</h1>
-        <p class="text-lg text-gray-600 max-w-2xl mx-auto">Explora nuestra colección de muebles diseñados para elevar tu
-            espacio.</p>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-6">Bienvenidos a Laserdreams, consulta por descuentos por
+            compra mayorista. <a href="https://wa.me/5492235772165" target="_blank"
+                class="text-violet-600 font-bold hover:underline">+5492235772165</a>.</p>
+        <a href="/api/descargar_lista_precios.php" target="_blank"
+            class="inline-flex items-center gap-2 bg-gray-900 text-white px-8 py-4 rounded-full font-black text-xs uppercase tracking-widest hover:bg-violet-600 transition-all shadow-xl shadow-gray-900/20 active:scale-95">
+            📄 Descargar Lista de Precios
+        </a>
     </div>
 
     <!-- Filtros -->
