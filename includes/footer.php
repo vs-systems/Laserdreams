@@ -9,8 +9,8 @@
                 LASER <span class="text-violet-500">DREAMS</span>
             </a>
             <p class="text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
-                Diseñamos y fabricamos muebles premium para transformar cada rincón de tu hogar en una experiencia
-                única.
+                Especialistas en iluminación profesional para eventos, espectáculos y producciones audiovisuales.
+                Más de 13 años de experiencia en el mercado..
             </p>
             <div class="pt-4 border-t border-gray-800 inline-block">
                 <p class="text-[10px] uppercase font-black tracking-widest text-gray-500 mb-1">Desarrollado por</p>
