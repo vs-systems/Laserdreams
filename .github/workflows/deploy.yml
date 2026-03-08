@@ -1,4 +1,4 @@
-name: Despliegue MG Muebles
+name: Despliegue LASERDREAMS
 
 on:
   push:
@@ -22,5 +22,5 @@ jobs:
         server-dir: ./
         timeout: 9999
         # Los secretos deben configurarse en GitHub:
-        # FTP_USERNAME: u499089589.Mgmuebles
+        # FTP_USERNAME: u499089589.lsd
         # FTP_PASSWORD: Blanca1938@
