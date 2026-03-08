@@ -24,7 +24,7 @@ require __DIR__ . '/../includes/db.php';
   <header class="bg-gray-900 text-white sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
       <div class="flex items-center gap-4">
-        <span class="text-xl font-black tracking-tight">MG <span class="text-violet-500">Muebles</span> Admin</span>
+        <span class="text-xl font-black tracking-tight">LASER <span class="text-violet-500">DREAMS</span> Admin</span>
         <span
           class="hidden md:inline text-xs font-bold uppercase tracking-widest text-gray-400 bg-white/5 px-3 py-1 rounded-full">Panel
           de Gestión</span>
@@ -41,8 +41,9 @@ require __DIR__ . '/../includes/db.php';
       <div class="mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
         <div>
           <h1 class="text-4xl font-black text-gray-900 mb-2 tracking-tight">Dashboard</h1>
-          <p class="text-gray-500 font-medium">Panel de control integral de <span class="text-violet-600 font-bold">MG
-              Muebles</span>.</p>
+          <p class="text-gray-500 font-medium">Panel de control integral de <span
+              class="text-violet-600 font-bold">LASER
+              DREAMS</span>.</p>
         </div>
         <div class="bg-violet-500/10 border border-violet-500/20 px-6 py-3 rounded-2xl flex items-center gap-3">
           <span class="animate-pulse w-2 h-2 bg-violet-500 rounded-full"></span>

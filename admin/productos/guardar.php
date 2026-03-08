@@ -15,7 +15,7 @@ try {
 
     $codigo = strtoupper(trim($_POST['codigo'] ?? ''));
     $titulo = trim($_POST['titulo'] ?? '');
-    $marca = trim($_POST['marca'] ?? '');
+    $marca_id = !empty($_POST['marca_id']) ? (int) $_POST['marca_id'] : null;
     $descripcion = trim($_POST['descripcion'] ?? '');
 
     // Convert to null if empty so foreign key constraint doesn't fail with 0 if no category 0 exists
@@ -33,6 +33,7 @@ try {
     $oferta = isset($_POST['es_oferta']) ? 1 : 0;
     $nuevo = isset($_POST['es_nuevo']) ? 1 : 0;
     $destacado = isset($_POST['es_destacado']) ? 1 : 0;
+    $es_usado = isset($_POST['es_usado']) ? 1 : 0;
 
     if ($titulo === '') {
         throw new Exception('El título es obligatorio.');
@@ -52,15 +53,15 @@ try {
 
     $stmt = $pdo->prepare("
         INSERT INTO productos
-        (codigo, titulo, marca, descripcion, categoria_id, activo, en_stock, es_oferta, es_nuevo, es_destacado,
+        (codigo, titulo, marca_id, descripcion, categoria_id, activo, en_stock, es_oferta, es_nuevo, es_destacado, es_usado,
          tipo_bulto, unidades_por_bulto, costo_compra, margen_porcentaje, precio_venta_usd, manual_tecnico)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
     $stmt->execute([
         $codigo,
         $titulo,
-        $marca,
+        $marca_id,
         $descripcion,
         $categoria_id,
         $activo,
@@ -68,6 +69,7 @@ try {
         $oferta,
         $nuevo,
         $destacado,
+        $es_usado,
         $tipo_bulto,
         $unidades_por_bulto,
         $costo_compra,

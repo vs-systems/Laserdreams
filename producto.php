@@ -9,7 +9,7 @@ function e($v)
 
 $id = (int) ($_GET['id'] ?? 0);
 
-$stmt = $pdo->prepare("SELECT p.*, c.nombre as categoria_nombre FROM productos p LEFT JOIN categorias c ON p.categoria_id = c.id WHERE p.id=? AND p.activo=1");
+$stmt = $pdo->prepare("SELECT p.*, c.nombre as categoria_nombre, m.nombre as marca_nombre, m.tipo_dolar, m.recargo_dolar_pesos, m.recargo_bancario_porcentaje FROM productos p LEFT JOIN categorias c ON p.categoria_id = c.id LEFT JOIN marcas m ON p.marca_id = m.id WHERE p.id=? AND p.activo=1");
 $stmt->execute([$id]);
 $p = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -31,10 +31,12 @@ if (!empty($p['foto_3']))
 if (!empty($p['foto_4']))
     $mediaItems[] = ['archivo' => $p['foto_4'], 'tipo' => 'imagen'];
 
-$cotizacion = $GLOBALS['cotizacion_aplicada'] ?? 1000;
-$subtotal = ((float) $p['precio_venta_usd']) * $cotizacion;
-$recargo = $subtotal * 0.05;
-$precio_final = $subtotal + $recargo;
+$precio_final = calcular_precio_final(
+    $p['precio_venta_usd'],
+    $p['tipo_dolar'] ?? 'blue',
+    $p['recargo_dolar_pesos'] ?? 0,
+    $p['recargo_bancario_porcentaje'] ?? 0
+);
 
 ?>
 
@@ -92,6 +94,11 @@ $precio_final = $subtotal + $recargo;
                         <span
                             class="bg-red-600 text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm">Oferta</span>
                     <?php endif; ?>
+                    <?php if (!empty($p['es_usado'])): ?>
+                        <span
+                            class="bg-amber-600 text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm">Usado</span>
+                    <?php endif; ?>
+
                     <?php if (!empty($p['es_destacado'])): ?>
                         <span
                             class="bg-violet-500 text-black px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm">Destacado</span>
@@ -132,15 +139,11 @@ $precio_final = $subtotal + $recargo;
                     <?= e(ucwords(strtolower($p['titulo']))) ?>
                 </h1>
 
-                <?php if (!empty($p['marca'])): ?>
-                    <div class="mb-4">
-                        <span
-                            class="bg-gray-100 text-gray-800 text-xs font-black px-3 py-1 rounded-full uppercase tracking-widest border border-gray-200">
-                            <?= e($p['marca']) ?>
-                        </span>
-                    </div>
-                <?php endif; ?>
-
+                <div class="mb-4">
+                    <span class="text-xs font-black text-gray-400 uppercase tracking-widest block mb-1">Marca</span>
+                    <span
+                        class="text-lg font-black text-violet-600"><?= htmlspecialchars($p['marca_nombre'] ?? 'Genérico') ?></span>
+                </div>
                 <div class="flex items-center gap-4">
                     <span
                         class="text-4xl font-black text-green-700">$<?= number_format($precio_final, 0, ',', '.') ?></span>

@@ -33,6 +33,9 @@ if (!defined('HEADER_INCLUDED')) {
             }
         </style>
 
+        <!-- Favicon -->
+        <link rel="icon" type="image/png" href="/assets/img/logo.png">
+
         <!-- JS CORE DEL CARRITO (DEBE ESTAR ANTES DE onclick) -->
         <script src="/assets/js/carrito.js"></script>
     </head>
@@ -47,9 +50,15 @@ if (!defined('HEADER_INCLUDED')) {
                     </span>
                 </a>
 
-                <nav class="hidden md:flex items-center space-x-10 text-xs font-black uppercase tracking-[0.2em]">
+                <nav class="hidden md:flex items-center space-x-10 text-[10px] font-black uppercase tracking-[0.2em]">
                     <a href="/catalogo.php"
-                        class="hover:text-violet-500 transition-colors py-2 border-b-2 border-transparent hover:border-violet-500">Catálogo</a>
+                        class="hover:text-red-600 transition-colors py-2 border-b-2 border-transparent hover:border-red-600">Productos</a>
+                    <a href="/assets/img/Sanyi_MDQ.pdf" target="_blank"
+                        class="hover:text-red-600 transition-colors py-2 border-b-2 border-transparent hover:border-red-600">Catálogo
+                        Sanyi</a>
+                    <a href="/assets/img/Bigdipper_MDQ.pdf" target="_blank"
+                        class="hover:text-red-600 transition-colors py-2 border-b-2 border-transparent hover:border-red-600">Catálogo
+                        Bigdipper</a>
                 </nav>
 
                 <div class="flex items-center gap-6">

@@ -62,6 +62,12 @@ require __DIR__ . '/includes/header.php';
                     class="w-full px-6 py-4 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-violet-500 focus:bg-white transition-all outline-none font-bold text-gray-900">
             </div>
 
+            <div class="space-y-2">
+                <label class="text-[10px] font-black uppercase tracking-widest text-gray-400">Localidad / Ciudad</label>
+                <input type="text" id="checkout-localidad" required placeholder="Ej: Mar del Plata"
+                    class="w-full px-6 py-4 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-violet-500 focus:bg-white transition-all outline-none font-bold text-gray-900">
+            </div>
+
             <button type="submit" id="btn-finalizar"
                 class="w-full bg-violet-500 text-black py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-gray-900 hover:text-white transition-all shadow-xl shadow-violet-500/20 active:scale-95 flex items-center justify-center gap-3">
                 <span>💬</span> Confirmar y enviar WhatsApp
@@ -91,9 +97,10 @@ require __DIR__ . '/includes/header.php';
 
         const btn = document.getElementById('btn-finalizar');
         const nombre = document.getElementById('checkout-nombre').value.trim();
+        const localidad = document.getElementById('checkout-localidad').value.trim();
         const carritoData = window.MGCarrito.get();
 
-        if (!nombre) return alert('Por favor, completa tu nombre.');
+        if (!nombre || !localidad) return alert('Por favor, completa tu nombre y localidad.');
 
         btn.disabled = true;
         btn.innerHTML = '<span>⏳</span> Procesando...';
@@ -111,6 +118,7 @@ require __DIR__ . '/includes/header.php';
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     nombre,
+                    localidad,
                     email: 'vía WhatsApp',
                     carrito: carritoData.items,
                     total: totalVal
@@ -124,7 +132,7 @@ require __DIR__ . '/includes/header.php';
             }
 
             // 2. Generar mensaje de WhatsApp - Normalizando caracteres
-            let mensaje = `Hola! 👋 Soy *${nombre}* y me interesa una cotizacion por:%0A%0A`;
+            let mensaje = `Hola! 👋 Soy *${nombre}* de *${localidad}* y me interesa una cotizacion por:%0A%0A`;
 
             carritoData.items.forEach(item => {
                 const precioTexto = item.precio > 0 ? `$${parseFloat(item.precio).toLocaleString('es-AR')}` : 'Consultar';

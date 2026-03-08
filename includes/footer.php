@@ -24,7 +24,6 @@
             <h4 class="text-white font-black uppercase tracking-widest text-xs">Visítanos</h4>
             <div class="space-y-4">
                 <p class="text-sm">
-                    Saavedra 3091<br>
                     Mar del Plata, Buenos Aires
                 </p>
                 <div class="flex flex-col gap-2">
@@ -33,7 +32,7 @@
                         <span class="text-violet-500">📱</span> 223 5655238
                     </a>
                     <p class="flex items-center justify-center md:justify-start gap-2">
-                        <span class="text-violet-500">☎️</span> 223 4785071
+                        <span class="text-violet-500">☎️</span> 11 3889 1414 (soporte)
                     </p>
                 </div>
             </div>

@@ -39,13 +39,19 @@ require __DIR__ . '/../includes/header.php';
                     </p>
                 </div>
                 <div>
+                    <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Localidad /
+                        Ciudad</label>
+                    <p class="font-black text-gray-900 text-lg leading-tight">
+                        <?= htmlspecialchars($pedido['localidad'] ?: 'No proporcionada') ?>
+                </div>
+                <div>
                     <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Fecha y
                         Hora</label>
                     <p class="font-bold text-gray-600"><?= date('d/m/Y H:i', strtotime($pedido['created_at'])) ?></p>
                 </div>
 
                 <div class="pt-4">
-                    <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', get_ajuste('whatsapp_nro')) ?>?text=Hola%20<?= urlencode($pedido['nombre']) ?>%2C%20te%20contacto%20desde%20MG%20Muebles%20por%20tu%20consulta%20del%20<?= date('d/m', strtotime($pedido['created_at'])) ?>"
+                    <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', get_ajuste('whatsapp_nro')) ?>?text=Hola%20<?= urlencode($pedido['nombre']) ?>%2C%20te%20contacto%20desde%20Laserdreams%20por%20tu%20consulta%20del%20<?= date('d/m', strtotime($pedido['created_at'])) ?>"
                         target="_blank"
                         class="w-full bg-green-500 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-green-600 transition-all shadow-xl shadow-green-500/20 flex items-center justify-center gap-3">
                         <span class="text-lg">💬</span> Contactar por WhatsApp

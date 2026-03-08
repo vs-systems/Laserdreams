@@ -14,7 +14,7 @@ if ($id <= 0) {
 
 $codigo = strtoupper(trim($_POST['codigo'] ?? ''));
 $titulo = trim($_POST['titulo'] ?? '');
-$marca = trim($_POST['marca'] ?? '');
+$marca_id = !empty($_POST['marca_id']) ? (int) $_POST['marca_id'] : null;
 $descripcion = trim($_POST['descripcion'] ?? '');
 
 $categoria_id = !empty($_POST['categoria_id']) ? (int) $_POST['categoria_id'] : null;
@@ -31,6 +31,7 @@ $en_stock = isset($_POST['en_stock']) ? 1 : 0;
 $oferta = isset($_POST['es_oferta']) ? 1 : 0;
 $nuevo = isset($_POST['es_nuevo']) ? 1 : 0;
 $destacado = isset($_POST['es_destacado']) ? 1 : 0;
+$es_usado = isset($_POST['es_usado']) ? 1 : 0;
 
 try {
     $pdo->beginTransaction();
@@ -54,7 +55,7 @@ try {
         UPDATE productos
         SET codigo = ?,
             titulo = ?,
-            marca = ?,
+            marca_id = ?,
             descripcion = ?,
             categoria_id = ?,
             activo = ?,
@@ -62,6 +63,7 @@ try {
             es_oferta = ?,
             es_nuevo = ?,
             es_destacado = ?,
+            es_usado = ?,
             tipo_bulto = ?,
             unidades_por_bulto = ?,
             costo_compra = ?,
@@ -74,7 +76,7 @@ try {
     $final_params = [
         $codigo,
         $titulo,
-        $marca,
+        $marca_id,
         $descripcion,
         $categoria_id,
         $activo,
@@ -82,6 +84,7 @@ try {
         $oferta,
         $nuevo,
         $destacado,
+        $es_usado,
         $tipo_bulto,
         $unidades_por_bulto,
         $costo_compra,

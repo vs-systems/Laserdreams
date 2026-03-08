@@ -2,6 +2,32 @@
 require __DIR__ . '/../../includes/db.php';
 
 // ==========================
+// Filtros
+// ==========================
+$q = trim($_GET['q'] ?? '');
+$categoria_id = $_GET['categoria_id'] ?? '';
+$marca_id = $_GET['marca_id'] ?? '';
+
+$params = [];
+$where = " WHERE 1=1 ";
+
+if ($q !== '') {
+    $where .= " AND (p.titulo LIKE ? OR p.codigo LIKE ? OR c.nombre LIKE ? OR m.nombre LIKE ?) ";
+    $like = "%$q%";
+    $params = [$like, $like, $like, $like];
+}
+
+if ($categoria_id !== '') {
+    $where .= " AND p.categoria_id = ? ";
+    $params[] = $categoria_id;
+}
+
+if ($marca_id !== '') {
+    $where .= " AND p.marca_id = ? ";
+    $params[] = $marca_id;
+}
+
+// ==========================
 // Traer productos + relaciones
 // ==========================
 $sql = "
@@ -10,6 +36,7 @@ SELECT
     p.codigo,
     p.titulo,
     c.nombre AS categoria,
+    m.nombre AS marca,
     p.precio_venta_usd,
     p.tipo_bulto,
     p.unidades_por_bulto,
@@ -19,26 +46,76 @@ SELECT
     p.activo
 FROM productos p
 LEFT JOIN categorias c ON c.id = p.categoria_id
+LEFT JOIN marcas m ON m.id = p.marca_id
+$where
 ORDER BY p.activo DESC, p.id DESC
 ";
 
-$productos = $pdo->query($sql)->fetchAll();
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
+$productos = $stmt->fetchAll();
+
+$categorias = $pdo->query("SELECT id, nombre FROM categorias ORDER BY nombre")->fetchAll();
+$marcas = $pdo->query("SELECT id, nombre FROM marcas ORDER BY nombre")->fetchAll();
 
 $adminTitle = 'Catálogo de Productos';
 require __DIR__ . '/../includes/header.php';
 ?>
 
-<div class="mb-6 flex justify-end" id="admin_actions_injector">
-    <a href="crear.php"
-        class="bg-violet-500 text-black px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-gray-900 hover:text-white transition-all shadow-xl shadow-violet-500/10 flex items-center gap-2">
-        <span>➕</span> Nuevo Producto
-    </a>
+<div
+    class="mb-6 flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-6 rounded-[32px] border border-gray-100 shadow-sm">
+    <form action="index.php" method="GET" id="filterForm" class="flex-grow flex flex-col md:flex-row gap-4 w-full">
+        <div class="relative flex-grow">
+            <span
+                class="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-violet-500 transition-colors">🔍</span>
+            <input type="text" name="q" value="<?= htmlspecialchars($q) ?>"
+                placeholder="Buscar por código, título, categoría o marca..."
+                class="w-full pl-14 pr-6 py-4 rounded-2xl bg-gray-50 border border-transparent focus:border-violet-500 focus:ring-4 focus:ring-violet-500/10 transition-all outline-none font-bold text-gray-900">
+        </div>
+
+        <select name="marca_id" onchange="this.form.submit()"
+            class="px-6 py-4 rounded-2xl bg-gray-50 border border-transparent focus:border-violet-500 outline-none font-bold text-gray-700 appearance-none cursor-pointer">
+            <option value="">Todas las Marcas</option>
+            <?php foreach ($marcas as $m): ?>
+                <option value="<?= $m['id'] ?>" <?= $marca_id == $m['id'] ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($m['nombre']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+
+        <select name="categoria_id" onchange="this.form.submit()"
+            class="px-6 py-4 rounded-2xl bg-gray-50 border border-transparent focus:border-violet-500 outline-none font-bold text-gray-700 appearance-none cursor-pointer">
+            <option value="">Todas las Categorías</option>
+            <?php foreach ($categorias as $c): ?>
+                <option value="<?= $c['id'] ?>" <?= $categoria_id == $c['id'] ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($c['nombre']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </form>
+
+    <div class="flex gap-4 w-full md:w-auto justify-end" id="admin_actions_injector">
+        <a href="importar.php"
+            class="bg-gray-100 text-gray-600 px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-gray-900 hover:text-white transition-all flex items-center gap-2">
+            <span>📥</span> Importar CSV
+        </a>
+        <a href="crear.php"
+            class="bg-violet-500 text-black px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-gray-900 hover:text-white transition-all shadow-xl shadow-violet-500/20 flex items-center gap-2">
+            <span>➕</span> Nuevo Producto
+        </a>
+    </div>
 </div>
 
 <?php if (isset($_GET['ok'])): ?>
     <div
         class="bg-green-50 text-green-600 p-5 rounded-3xl text-sm font-bold mb-8 border border-green-100 flex items-center gap-3 animate-pulse">
-        <span>✅</span> Producto gestionado correctamente
+        <span>✅</span> Producto gestionado correctamente.
+        <?php if (isset($_GET['count'])): ?>
+            (<?= (int) $_GET['count'] ?> importados
+            <?php if (isset($_GET['errors']) && $_GET['errors'] > 0): ?>
+                , <span class="text-red-500"><?= (int) $_GET['errors'] ?> con errores</span>
+            <?php endif; ?>)
+        <?php endif; ?>
     </div>
 <?php endif; ?>
 
@@ -49,6 +126,7 @@ require __DIR__ . '/../includes/header.php';
                 <tr class="bg-gray-50/50 border-b border-gray-100">
                     <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-gray-400">Código</th>
                     <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-gray-400">Producto</th>
+                    <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-gray-400">Marca</th>
                     <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-gray-400">Categoría</th>
                     <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-gray-400">Datos Venta
                     </th>
@@ -83,6 +161,10 @@ require __DIR__ . '/../includes/header.php';
                                     <?= htmlspecialchars($p['titulo']) ?>
                                 </span>
                             </div>
+                        </td>
+                        <td class="px-8 py-6">
+                            <span
+                                class="text-xs font-black text-gray-900"><?= htmlspecialchars($p['marca'] ?: 'S/D') ?></span>
                         </td>
                         <td class="px-8 py-6">
                             <span
@@ -160,11 +242,15 @@ require __DIR__ . '/../includes/header.php';
 </div>
 
 <script>
-    const actions = document.getElementById('admin_actions');
-    if (actions) {
-        const btn = document.querySelector('#admin_actions_injector a').cloneNode(true);
-        actions.appendChild(btn);
-        document.getElementById('admin_actions_injector').remove();
+    const actionsContainer = document.getElementById('admin_actions');
+    const injector = document.getElementById('admin_actions_injector');
+    if (actionsContainer && injector) {
+        // Mover todos los botones del inyector al contenedor de acciones del header
+        const buttons = injector.querySelectorAll('a');
+        buttons.forEach(btn => {
+            actionsContainer.appendChild(btn.cloneNode(true));
+        });
+        injector.remove();
     }
 </script>
 

@@ -54,6 +54,8 @@ require __DIR__ . '/../includes/header.php';
                                 <span
                                     class="font-black text-gray-900 tracking-tight transition-colors group-hover:text-violet-600"><?= htmlspecialchars($p['nombre']) ?></span>
                                 <span
+                                    class="text-[10px] text-gray-400 font-bold uppercase tracking-widest"><?= htmlspecialchars($p['localidad'] ?? 'S/D') ?></span>
+                                <span
                                     class="text-[10px] text-gray-400 font-bold uppercase tracking-widest"><?= htmlspecialchars($p['email'] ?? 'WhatsApp Link') ?></span>
                             </div>
                         </td>
@@ -84,10 +86,9 @@ require __DIR__ . '/../includes/header.php';
                                     <?= $p['estado'] === 'Nuevo' ? 'bg-yellow-100 text-yellow-700' :
                                         ($p['estado'] === 'Cotizado' ? 'bg-orange-500 text-white' :
                                             ($p['estado'] === 'Confirmado' ? 'bg-green-100 text-green-700' :
-                                                ($p['estado'] === 'En Producción' ? 'bg-orange-400 text-white animate-pulse' :
-                                                    ($p['estado'] === 'Enviado' ? 'bg-green-600 text-white' :
-                                                        ($p['estado'] === 'Cancelado' ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-600'))))) ?>">
-                                    <?php foreach (['Nuevo', 'Cotizado', 'Confirmado', 'En Producción', 'Enviado', 'Cancelado'] as $e): ?>
+                                                ($p['estado'] === 'Enviado' ? 'bg-green-600 text-white' :
+                                                    ($p['estado'] === 'Cancelado' ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-600')))) ?>">
+                                    <?php foreach (['Nuevo', 'Cotizado', 'Confirmado', 'Enviado', 'Cancelado'] as $e): ?>
                                         <option value="<?= $e ?>" <?= $p['estado'] == $e ? 'selected' : '' ?>><?= $e ?></option>
                                     <?php endforeach; ?>
                                 </select>

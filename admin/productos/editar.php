@@ -25,11 +25,13 @@ if (!$producto) {
 }
 
 $categorias = $pdo->query("SELECT id, nombre FROM categorias ORDER BY nombre")->fetchAll();
+$marcas = $pdo->query("SELECT id, nombre, tipo_dolar, recargo_dolar_pesos, recargo_bancario_porcentaje FROM marcas ORDER BY nombre")->fetchAll();
 
 $adminTitle = 'Editar: ' . $producto['titulo'];
 require __DIR__ . '/../includes/header.php';
 
-$cotizacion_js = $GLOBALS['cotizacion_aplicada'] ?? 0;
+$dolar_blue = $GLOBALS['dolar_blue_base'] ?? 0;
+$dolar_oficial = $GLOBALS['dolar_oficial_base'] ?? 0;
 ?>
 
 <form action="actualizar.php" method="post" enctype="multipart/form-data"
@@ -72,9 +74,19 @@ $cotizacion_js = $GLOBALS['cotizacion_aplicada'] ?? 0;
 
             <div>
                 <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-3">Marca</label>
-                <input type="text" name="marca" value="<?= e($producto['marca'] ?? '') ?>"
-                    placeholder="Ej. BEAM, SANYI, genérico..."
-                    class="w-full px-6 py-4 rounded-2xl bg-gray-50 border border-transparent focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 transition-all outline-none font-black text-gray-900 text-lg">
+                <select name="marca_id" id="marca_select"
+                    class="w-full px-6 py-4 rounded-2xl bg-gray-50 border border-transparent focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 transition-all outline-none font-black text-gray-900 text-lg appearance-none cursor-pointer">
+                    <option value="" data-tipo="blue" data-pesos="15" data-porc="5">(Sin Marca) - Usa Blue + $15 + 5%
+                    </option>
+                    <?php foreach ($marcas as $m): ?>
+                        <option value="<?= $m['id'] ?>" data-tipo="<?= htmlspecialchars($m['tipo_dolar']) ?>"
+                            data-pesos="<?= htmlspecialchars($m['recargo_dolar_pesos']) ?>"
+                            data-porc="<?= htmlspecialchars($m['recargo_bancario_porcentaje']) ?>"
+                            <?= ($producto['marca_id'] == $m['id']) ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($m['nombre']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
             </div>
 
             <div>
@@ -138,8 +150,7 @@ $cotizacion_js = $GLOBALS['cotizacion_aplicada'] ?? 0;
                     <span class="block text-[9px] font-black uppercase tracking-widest text-gray-400 mb-1">Coti.
                         Aplicada</span>
                     <!-- Este valor es estático visualmente aquí, pero se calcula con JS también -->
-                    <span class="text-lg font-black text-blue-600"
-                        id="l_coti">$<?= number_format($cotizacion_js, 2, ',', '.') ?></span>
+                    <span class="text-lg font-black text-blue-600" id="l_coti">$0,00</span>
                 </div>
                 <div>
                     <span class="block text-[9px] font-black uppercase tracking-widest text-gray-400 mb-1">Subtotal
@@ -232,6 +243,13 @@ $cotizacion_js = $GLOBALS['cotizacion_aplicada'] ?? 0;
                             Nuevo Ingreso</span>
                     </label>
                     <label class="flex items-center gap-4 cursor-pointer group">
+                        <input type="checkbox" name="es_usado" value="1" <?= !empty($producto['es_usado']) ? 'checked' : '' ?>
+                            class="w-6 h-6 rounded-lg border-2 border-gray-100 checked:bg-amber-600 checked:border-amber-600 transition-all outline-none appearance-none cursor-pointer">
+                        <span
+                            class="text-xs font-black uppercase tracking-widest text-gray-600 group-hover:text-amber-600 transition-colors">♻️
+                            Usado</span>
+                    </label>
+                    <label class="flex items-center gap-4 cursor-pointer group">
                         <input type="checkbox" name="es_destacado" value="1" <?= !empty($producto['es_destacado']) ? 'checked' : '' ?>
                             class="w-6 h-6 rounded-lg border-2 border-gray-100 checked:bg-orange-500 checked:border-orange-500 transition-all outline-none appearance-none cursor-pointer">
                         <span
@@ -258,11 +276,15 @@ $cotizacion_js = $GLOBALS['cotizacion_aplicada'] ?? 0;
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
 <script>
-    const cotizacion = <?= json_encode($cotizacion_js) ?>;
+    const dolarBlue = <?= json_encode($dolar_blue) ?>;
+    const dolarOficial = <?= json_encode($dolar_oficial) ?>;
+
     const iCosto = document.getElementById('i_costo');
     const iMargen = document.getElementById('i_margen');
     const iVenta = document.getElementById('i_venta');
+    const sMarca = document.getElementById('marca_select');
 
+    const lCoti = document.getElementById('l_coti');
     const lSub = document.getElementById('l_sub');
     const lRec = document.getElementById('l_rec');
     const lNeto = document.getElementById('l_neto');
@@ -273,13 +295,25 @@ $cotizacion_js = $GLOBALS['cotizacion_aplicada'] ?? 0;
 
     function recalcularPreciosPesos() {
         let pv = parseFloat(iVenta.value) || 0;
-        let subtotal = pv * cotizacion;
-        let recargo = subtotal * 0.05;
+
+        let opt = sMarca.options[sMarca.selectedIndex];
+        let tipoDolar = opt.getAttribute('data-tipo') || 'blue';
+        let recargoPesos = parseFloat(opt.getAttribute('data-pesos')) || 0;
+        let recargoPorc = parseFloat(opt.getAttribute('data-porc')) || 0;
+
+        let cotiBase = (tipoDolar === 'oficial') ? dolarOficial : dolarBlue;
+        let cotiAplicada = cotiBase + recargoPesos;
+
+        let subtotal = pv * cotiAplicada;
+        let recargo = subtotal * (recargoPorc / 100);
         let neto = subtotal + recargo;
 
+        lCoti.textContent = formatPesos(cotiAplicada);
         lSub.textContent = formatPesos(subtotal);
         lRec.textContent = formatPesos(recargo);
         lNeto.textContent = formatPesos(neto);
+
+        lRec.previousElementSibling.textContent = `Recargo ${recargoPorc}% (ARS)`;
     }
 
     function onCostoMargenChange() {
@@ -305,6 +339,7 @@ $cotizacion_js = $GLOBALS['cotizacion_aplicada'] ?? 0;
     iCosto.addEventListener('input', onCostoMargenChange);
     iMargen.addEventListener('input', onCostoMargenChange);
     iVenta.addEventListener('input', onVentaChange);
+    sMarca.addEventListener('change', recalcularPreciosPesos);
 
     // Inicializar visualmente en edición
     recalcularPreciosPesos();

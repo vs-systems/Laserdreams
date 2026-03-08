@@ -16,8 +16,9 @@ function e($v)
 
 $busqueda = $_GET['q'] ?? '';
 $categoria = $_GET['categoria'] ?? '';
+$marca = $_GET['marca'] ?? '';
 
-$porPagina = 20;
+$porPagina = 9;
 $pagina = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 if ($pagina < 1)
     $pagina = 1;
@@ -42,6 +43,11 @@ if ($categoria !== '') {
     $paramsCount[] = $categoria;
 }
 
+if ($marca !== '') {
+    $sqlCount .= " AND p.marca_id = ?";
+    $paramsCount[] = $marca;
+}
+
 $stmtCount = $pdo->prepare($sqlCount);
 $stmtCount->execute($paramsCount);
 $totalProductos = $stmtCount->fetchColumn();
@@ -52,8 +58,11 @@ $totalPaginas = ceil($totalProductos / $porPagina);
 /* ========================= */
 
 $sql = "
-SELECT p.*, p.foto_principal AS imagen_principal
+SELECT p.*, p.foto_principal AS imagen_principal, c.nombre as categoria_nombre, m.nombre as marca_nombre,
+       m.tipo_dolar, m.recargo_dolar_pesos, m.recargo_bancario_porcentaje
 FROM productos p
+LEFT JOIN categorias c ON p.categoria_id = c.id
+LEFT JOIN marcas m ON p.marca_id = m.id
 WHERE p.activo = 1
 ";
 
@@ -70,13 +79,19 @@ if ($categoria !== '') {
     $params[] = $categoria;
 }
 
-$sql .= " ORDER BY p.created_at DESC LIMIT $porPagina OFFSET $offset";
+if ($marca !== '') {
+    $sql .= " AND p.marca_id = ?";
+    $params[] = $marca;
+}
+
+$sql .= " ORDER BY p.es_nuevo DESC, p.created_at DESC LIMIT $porPagina OFFSET $offset";
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $categorias = $pdo->query("SELECT id, nombre FROM categorias ORDER BY nombre")->fetchAll();
+$marcas = $pdo->query("SELECT id, nombre FROM marcas ORDER BY nombre")->fetchAll();
 ?>
 
 
@@ -102,7 +117,7 @@ $categorias = $pdo->query("SELECT id, nombre FROM categorias ORDER BY nombre")->
                     class="bg-red-600 hover:bg-white hover:text-red-600 text-white px-8 py-4 rounded-full font-black text-xs uppercase tracking-widest transition-all shadow-xl shadow-red-600/20 active:scale-95">
                     Ver Catálogo
                 </a>
-                <a href="https://wa.me/5491100000000" target="_blank"
+                <a href="https://wa.me/5492235772165" target="_blank"
                     class="bg-white/10 backdrop-blur border border-white/20 text-white hover:bg-white/20 px-8 py-4 rounded-full font-black text-xs uppercase tracking-widest transition-all active:scale-95">
                     Asesoría
                 </a>
@@ -135,16 +150,30 @@ $categorias = $pdo->query("SELECT id, nombre FROM categorias ORDER BY nombre")->
                 placeholder="¿Qué estás buscando?..." value="<?= e($busqueda) ?>">
         </div>
 
-        <div class="w-full md:w-64">
-            <select id="filtroCategoria"
-                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all outline-none appearance-none bg-no-repeat bg-[right_1rem_center] bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236b7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')]">
-                <option value="">Todas las categorías</option>
-                <?php foreach ($categorias as $c): ?>
-                    <option value="<?= $c['id'] ?>" <?= $categoria == $c['id'] ? 'selected' : '' ?>>
-                        <?= e($c['nombre']) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+        <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+            <div class="w-full md:w-48">
+                <select id="filtroMarca"
+                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-violet-500 transition-all outline-none appearance-none bg-no-repeat bg-[right_1rem_center] bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236b7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')]">
+                    <option value="">Todas las marcas</option>
+                    <?php foreach ($marcas as $m): ?>
+                        <option value="<?= $m['id'] ?>" <?= $marca == $m['id'] ? 'selected' : '' ?>>
+                            <?= e($m['nombre']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="w-full md:w-64">
+                <select id="filtroCategoria"
+                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-violet-500 transition-all outline-none appearance-none bg-no-repeat bg-[right_1rem_center] bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236b7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')]">
+                    <option value="">Todas las categorías</option>
+                    <?php foreach ($categorias as $c): ?>
+                        <option value="<?= $c['id'] ?>" <?= $categoria == $c['id'] ? 'selected' : '' ?>>
+                            <?= e($c['nombre']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
         </div>
     </div>
 
@@ -168,7 +197,9 @@ $categorias = $pdo->query("SELECT id, nombre FROM categorias ORDER BY nombre")->
                         <img src="/uploads/productos/<?= e($p['imagen_principal']) ?>" alt="<?= e($p['titulo']) ?>"
                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                     <?php else: ?>
-                        <img src="https://via.placeholder.com/600x800?text=Sin+imagen" class="w-full h-full object-cover">
+                        <div class="w-full h-full bg-gray-50 flex items-center justify-center p-8">
+                            <img src="/assets/img/logo.png" class="max-w-full max-h-full object-contain opacity-20">
+                        </div>
                     <?php endif; ?>
 
                     <div class="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors"></div>
@@ -184,6 +215,11 @@ $categorias = $pdo->query("SELECT id, nombre FROM categorias ORDER BY nombre")->
                             <span
                                 class="bg-green-600 text-white text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded shadow-sm">En
                                 Stock</span>
+                        <?php endif; ?>
+
+                        <?php if (!empty($p['es_usado'])): ?>
+                            <span
+                                class="bg-amber-600 text-white text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded shadow-sm">Usado</span>
                         <?php endif; ?>
 
                         <?php if (!empty($p['es_novedad'])): ?>
@@ -211,11 +247,16 @@ $categorias = $pdo->query("SELECT id, nombre FROM categorias ORDER BY nombre")->
 
                     <div class="mt-auto">
                         <?php
-                        $cotizacion = $GLOBALS['cotizacion_aplicada'] ?? 1000;
-                        $subtotal = ((float) $p['precio_venta_usd']) * $cotizacion;
-                        $recargo = $subtotal * 0.05;
-                        $precio_final = $subtotal + $recargo;
+                        $precio_final = calcular_precio_final(
+                            $p['precio_venta_usd'],
+                            $p['tipo_dolar'] ?? 'blue',
+                            $p['recargo_dolar_pesos'] ?? 0,
+                            $p['recargo_bancario_porcentaje'] ?? 0
+                        );
                         ?>
+                        <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 truncate">
+                            <?= htmlspecialchars($p['marca_nombre'] ?? 'Genérico') ?>
+                        </div>
                         <div class="text-2xl font-black text-green-700 mb-4">
                             $<?= number_format($precio_final, 0, ',', '.') ?>
                         </div>
@@ -249,7 +290,7 @@ $categorias = $pdo->query("SELECT id, nombre FROM categorias ORDER BY nombre")->
     <?php if ($totalPaginas > 1): ?>
         <div class="mt-16 flex justify-center items-center gap-4">
             <?php if ($pagina > 1): ?>
-                <a href="?page=<?= $pagina - 1 ?>&q=<?= urlencode($busqueda) ?>&categoria=<?= urlencode($categoria) ?>"
+                <a href="?page=<?= $pagina - 1 ?>&q=<?= urlencode($busqueda) ?>&categoria=<?= urlencode($categoria) ?>&marca=<?= urlencode($marca) ?>"
                     class="p-3 rounded-full bg-white border border-gray-200 hover:bg-gray-50 transition-all shadow-sm">
                     <span class="block w-6 h-6">←</span>
                 </a>
@@ -260,7 +301,7 @@ $categorias = $pdo->query("SELECT id, nombre FROM categorias ORDER BY nombre")->
             </div>
 
             <?php if ($pagina < $totalPaginas): ?>
-                <a href="?page=<?= $pagina + 1 ?>&q=<?= urlencode($busqueda) ?>&categoria=<?= urlencode($categoria) ?>"
+                <a href="?page=<?= $pagina + 1 ?>&q=<?= urlencode($busqueda) ?>&categoria=<?= urlencode($categoria) ?>&marca=<?= urlencode($marca) ?>"
                     class="p-3 rounded-full bg-white border border-gray-200 hover:bg-gray-50 transition-all shadow-sm">
                     <span class="block w-6 h-6">→</span>
                 </a>
@@ -271,20 +312,20 @@ $categorias = $pdo->query("SELECT id, nombre FROM categorias ORDER BY nombre")->
 </div>
 
 <script>
-    document.getElementById('filtroCategoria').addEventListener('change', function () {
-        const cat = this.value;
+    function refreshFilters() {
+        const cat = document.getElementById('filtroCategoria').value;
+        const marc = document.getElementById('filtroMarca').value;
         const busq = document.getElementById('buscador').value;
-        window.location.href = `?categoria=${cat}&q=${busq}`;
-    });
+        window.location.href = `?categoria=${cat}&marca=${marc}&q=${busq}`;
+    }
+
+    document.getElementById('filtroCategoria').addEventListener('change', refreshFilters);
+    document.getElementById('filtroMarca').addEventListener('change', refreshFilters);
 
     let searchTimeout;
     document.getElementById('buscador').addEventListener('input', function () {
         clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            const cat = document.getElementById('filtroCategoria').value;
-            const busq = this.value;
-            window.location.href = `?categoria=${cat}&q=${busq}`;
-        }, 500);
+        searchTimeout = setTimeout(refreshFilters, 500);
     });
 </script>
 

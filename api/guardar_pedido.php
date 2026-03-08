@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $input = json_decode(file_get_contents('php://input'), true);
 
 $nombre = trim($input['nombre'] ?? '');
+$localidad = trim($input['localidad'] ?? '');
 $email = trim($input['email'] ?? 'vía WhatsApp');
 $carrito = $input['carrito'] ?? [];
 $total = (float) ($input['total'] ?? 0);
@@ -25,12 +26,13 @@ if (empty($nombre) || empty($carrito)) {
 
 try {
     $stmt = $pdo->prepare("
-        INSERT INTO pedidos (nombre, email, carrito, total, estado)
-        VALUES (?, ?, ?, ?, 'Nuevo')
+        INSERT INTO pedidos (nombre, localidad, email, carrito, total, estado)
+        VALUES (?, ?, ?, ?, ?, 'Nuevo')
     ");
 
     $stmt->execute([
         $nombre,
+        $localidad,
         $email,
         json_encode($carrito),
         $total

@@ -41,7 +41,8 @@ $cotizacion_aplicada = $GLOBALS['cotizacion_aplicada'] ?? 0;
             <div class="flex items-center gap-4 hidden md:flex">
                 <div
                     class="bg-blue-900/40 border border-blue-500/30 text-blue-300 px-3 py-1.5 rounded-lg flex items-center gap-2">
-                    <span class="text-[10px] font-bold uppercase tracking-widest opacity-80">Dólar Blue (V. + $15)</span>
+                    <span class="text-[10px] font-bold uppercase tracking-widest opacity-80">Dólar Blue (V. +
+                        $15)</span>
                     <span
                         class="text-sm font-black">$<?php echo number_format($cotizacion_aplicada, 2, ',', '.'); ?></span>
                 </div>
@@ -55,6 +56,8 @@ $cotizacion_aplicada = $GLOBALS['cotizacion_aplicada'] ?? 0;
                         class="text-xs font-black uppercase tracking-widest <?= str_contains($_SERVER['PHP_SELF'], 'productos') ? 'text-violet-500' : 'text-gray-400 hover:text-white' ?>">Productos</a>
                     <a href="/admin/categorias/index.php"
                         class="text-xs font-black uppercase tracking-widest <?= str_contains($_SERVER['PHP_SELF'], 'categorias') ? 'text-violet-500' : 'text-gray-400 hover:text-white' ?>">Categorías</a>
+                    <a href="/admin/marcas/index.php"
+                        class="text-xs font-black uppercase tracking-widest <?= str_contains($_SERVER['PHP_SELF'], 'marcas') ? 'text-violet-500' : 'text-gray-400 hover:text-white' ?>">Marcas</a>
                     <a href="/admin/pedidos/index.php"
                         class="text-xs font-black uppercase tracking-widest <?= str_contains($_SERVER['PHP_SELF'], 'pedidos') ? 'text-violet-500' : 'text-gray-400 hover:text-white' ?>">Consultas</a>
                     <a href="/admin/informes/index.php"
