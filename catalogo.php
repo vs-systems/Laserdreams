@@ -70,7 +70,7 @@ if ($categoria !== '') {
     $params[] = $categoria;
 }
 
-$sql .= " ORDER BY p.creado_en DESC LIMIT $porPagina OFFSET $offset";
+$sql .= " ORDER BY p.created_at DESC LIMIT $porPagina OFFSET $offset";
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
