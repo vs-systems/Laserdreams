@@ -37,10 +37,12 @@ class MyPDF extends TCPDF
 
     public function Footer()
     {
-        $this->SetY(-15);
+        $this->SetY(-18);
         $this->SetFont('helvetica', 'I', 8);
-        $this->Cell(0, 10, 'Página ' . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
-        $this->Cell(0, 10, 'Laserdreams - Equipamiento técnico e iluminación', 0, false, 'R', 0, '', 0, false, 'T', 'M');
+        $this->SetTextColor(100, 100, 100);
+        $this->Cell(0, 5, '* Los valores expresados son netos. En caso de requerir comprobante fiscal, adicionar el 21% correspondiente a impuestos.', 0, 1, 'C', 0, '', 0, false, 'T', 'M');
+        $this->SetTextColor(0, 0, 0);
+        $this->Cell(0, 8, 'Página ' . $this->getAliasNumPage() . '/' . $this->getAliasNbPages() . ' | Laserdreams - Equipamiento técnico e iluminación', 0, false, 'C', 0, '', 0, false, 'T', 'M');
     }
 }
 
@@ -98,7 +100,7 @@ foreach ($productos as $p) {
         $pdf->SetFillColor(240, 240, 240);
         $pdf->Cell(35, 7, 'Código', 1, 0, 'C', true);
         $pdf->Cell(110, 7, 'Descripción', 1, 0, 'C', true);
-        $pdf->Cell(35, 7, 'Precio Final', 1, 1, 'C', true);
+        $pdf->Cell(35, 7, 'Precio Neto', 1, 1, 'C', true);
         $pdf->SetFont('helvetica', '', 9);
     }
 
