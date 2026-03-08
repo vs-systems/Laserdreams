@@ -6,7 +6,7 @@
         <!-- Logo y Info Legal -->
         <div class="space-y-6">
             <a href="/" class="text-2xl font-black text-white tracking-tight">
-                MG <span class="text-violet-500">Muebles</span>
+                LASER <span class="text-violet-500">DREAMS</span>
             </a>
             <p class="text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
                 Diseñamos y fabricamos muebles premium para transformar cada rincón de tu hogar en una experiencia
@@ -24,11 +24,11 @@
             <h4 class="text-white font-black uppercase tracking-widest text-xs">Visítanos</h4>
             <div class="space-y-4">
                 <p class="text-sm">
-                    Av. Fortunato de la Plaza 6471<br>
+                    Saavedra 3091<br>
                     Mar del Plata, Buenos Aires
                 </p>
                 <div class="flex flex-col gap-2">
-                    <a href="https://wa.me/542235655238" target="_blank"
+                    <a href="https://wa.me/542235772165" target="_blank"
                         class="flex items-center justify-center md:justify-start gap-2 hover:text-white transition-colors">
                         <span class="text-violet-500">📱</span> 223 5655238
                     </a>
@@ -43,10 +43,10 @@
         <div class="space-y-6">
             <h4 class="text-white font-black uppercase tracking-widest text-xs">Horarios de Atención</h4>
             <div class="space-y-4 text-sm">
-                <p>Lun a Vie: 9:00 - 12:30 | 16:00 - 19:30</p>
-                <p>Sábados: 9:00 - 13:00</p>
+                <p>Lun a Vie: 10:00 - 17:00</p>
+                <p>Sábados: 10:00 - 13:00</p>
                 <div class="pt-6">
-                    <a href="https://www.instagram.com/mgmueblesmdp" target="_blank"
+                    <a href="https://www.instagram.com/javgozzi" target="_blank"
                         class="inline-flex items-center gap-3 bg-white/5 hover:bg-white/10 px-6 py-3 rounded-2xl font-bold text-white transition-all">
                         <span>📸</span> Instagram
                     </a>
