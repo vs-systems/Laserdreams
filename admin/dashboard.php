@@ -8,7 +8,7 @@ require __DIR__ . '/../includes/db.php';
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard Admin | MG Muebles</title>
+  <title>Dashboard Admin | Laserdreams</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
@@ -154,7 +154,7 @@ require __DIR__ . '/../includes/db.php';
 
     <footer
       class="max-w-7xl mx-auto px-4 py-12 mt-12 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-400 text-sm font-medium">
-      <p class="font-bold">© <?= date('Y') ?> MG Muebles <span class="text-gray-200 mx-2">|</span> Gestión Profesional
+      <p class="font-bold">© <?= date('Y') ?> Laserdreams <span class="text-gray-200 mx-2">|</span> Gestión Profesional
       </p>
       <div class="flex gap-6 items-center">
         <a href="/" class="hover:text-gray-900 transition-colors font-black text-[10px] uppercase tracking-[0.2em]">Ver

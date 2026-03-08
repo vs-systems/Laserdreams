@@ -3,7 +3,8 @@
 <footer class="max-w-7xl mx-auto px-4 py-12 mt-auto border-t border-gray-100">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
         <div>
-            <p class="text-gray-900 font-black text-xs uppercase tracking-widest mb-2">© <?= date('Y') ?> MG Muebles</p>
+            <p class="text-gray-900 font-black text-xs uppercase tracking-widest mb-2">© <?= date('Y') ?> Laserdreams
+            </p>
             <p class="text-gray-400 text-[10px] font-bold uppercase tracking-widest">Área Administrativa Privada</p>
         </div>
 

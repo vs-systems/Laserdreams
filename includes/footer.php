@@ -59,7 +59,7 @@
     <div class="max-w-7xl mx-auto px-4 mt-20 pt-8 border-t border-gray-800 text-center">
         <p class="text-xs font-medium text-gray-600 uppercase tracking-widest italic">
             ©
-            <?= date('Y') ?> MG Muebles - Derechos Reservados.
+            <?= date('Y') ?> Laserdreams - Derechos Reservados.
         </p>
     </div>
 </footer>

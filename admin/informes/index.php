@@ -15,6 +15,15 @@ $orderStats = $pdo->query("
     GROUP BY estado
 ")->fetchAll();
 
+// 3. Productos por Categoría (Doughnut)
+$catStats = $pdo->query("
+    SELECT c.nombre, COUNT(p.id) as total 
+    FROM categorias c
+    LEFT JOIN productos p ON c.id = p.categoria_id AND p.activo = 1
+    GROUP BY c.id
+    HAVING total > 0
+")->fetchAll();
+
 $adminTitle = '📊 Informes y Estadísticas';
 require __DIR__ . '/../includes/header.php';
 ?>
