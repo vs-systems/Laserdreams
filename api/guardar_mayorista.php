@@ -30,16 +30,18 @@ if ($tipo_cliente == 'Otro' && empty($tipo_cliente_otro)) {
 $productos_json = json_encode($productos_interes);
 
 try {
-    $stmt = $pdo->prepare("INSERT INTO solicitudes_mayoristas (nombre, localidad, telefono, tipo_cliente, tipo_cliente_otro, productos_interes) VALUES (?, ?, ?, ?, ?, ?)");
+    $fecha = date('Y-m-d H:i:s');
+    $stmt = $pdo->prepare("INSERT INTO solicitudes_mayoristas (nombre, localidad, telefono, tipo_cliente, tipo_cliente_otro, productos_interes, fecha) VALUES (?, ?, ?, ?, ?, ?, ?)");
     $stmt->execute([
         $nombre,
         $localidad,
         $telefono,
         $tipo_cliente,
         $tipo_cliente_otro,
-        $productos_json
+        $productos_json,
+        $fecha
     ]);
     echo json_encode(['success' => true]);
 } catch (PDOException $e) {
-    echo json_encode(['success' => false, 'error' => 'Error de base de datos']);
+    echo json_encode(['success' => false, 'error' => 'Error de base de datos. Detalles: ' . $e->getMessage()]);
 }

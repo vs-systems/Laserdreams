@@ -8,7 +8,7 @@ try {
             `nombre` VARCHAR(255) NOT NULL,
             `email` VARCHAR(255) NOT NULL,
             `whatsapp` VARCHAR(255) NOT NULL,
-            `fecha` DATETIME DEFAULT CURRENT_TIMESTAMP,
+            `fecha` DATETIME NOT NULL,
             PRIMARY KEY (`id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     ");
@@ -23,7 +23,7 @@ try {
             `tipo_cliente_otro` VARCHAR(255) DEFAULT '',
             `productos_interes` TEXT,
             `estado` ENUM('Pendiente', 'Contactado', 'Cerrado') DEFAULT 'Pendiente',
-            `fecha` DATETIME DEFAULT CURRENT_TIMESTAMP,
+            `fecha` DATETIME NOT NULL,
             PRIMARY KEY (`id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     ");

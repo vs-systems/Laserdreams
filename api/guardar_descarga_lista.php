@@ -31,9 +31,14 @@ if (strlen($whatsapp_clean) < 8 || strlen($whatsapp_clean) > 15) {
 }
 
 try {
-    $stmt = $pdo->prepare("INSERT INTO descargas_listas (nombre, email, whatsapp) VALUES (?, ?, ?)");
-    $stmt->execute([$nombre, $email, $whatsapp_clean]);
+    $fecha = date('Y-m-d H:i:s');
+    $stmt = $pdo->prepare("INSERT INTO descargas_listas (nombre, email, whatsapp, fecha) VALUES (?, ?, ?, ?)");
+    $stmt->execute([$nombre, $email, $whatsapp_clean, $fecha]);
     echo json_encode(['success' => true]);
 } catch (PDOException $e) {
-    echo json_encode(['success' => false, 'error' => 'Error de base de datos']);
+    echo json_encode([
+        'success' => false,
+        'error' => 'Error de base de datos. Póngase en contacto con el administrador.',
+        'debug' => $e->getMessage()
+    ]);
 }
